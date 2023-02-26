@@ -1,0 +1,26 @@
+type Query {
+    departments: [Department!]! @paginate @guard
+    department(id: ID @eq): Department @find @guard
+}
+#
+type Mutation {
+    createDepartment(
+        name: String! @rules(apply: ["min:3", "max:255"]),
+        address: String! @rules(apply: ["min:3", "max:255"]),
+    ) : Department @create @guard
+    updateDepartment(
+        id: ID!,
+        name: String! @rules(apply: ["min:3", "max:255"]),
+        address: String! @rules(apply: ["min:3", "max:255"]),
+    ): Department! @update
+    deleteDepartment(id: ID!): Department @delete
+}
+
+type Department {
+    id: ID!
+    name: String!
+    address: String!
+    created_at: String!
+    updated_at: String!
+}
+
