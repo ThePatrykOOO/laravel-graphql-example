@@ -89,4 +89,30 @@ class AuthGraphQLTest extends TestCase
             ]
         );
     }
+
+    public function testLogoutSuccess(): void
+    {
+        Sanctum::actingAs(
+            User::factory()->create(),
+        );
+
+        $response = $this->graphQL(
+        /** @lang GraphQL */ '
+            mutation Logout {
+              logout {
+                message
+              }
+            }'
+        );
+
+        $response->assertJson(
+            [
+                'data' => [
+                    'logout' => [
+                        'message' => "Token deleted"
+                    ]
+                ]
+            ]
+        );
+    }
 }

@@ -1,10 +1,16 @@
+type LogoutResponse {
+    message: String
+}
+
 type Mutation {
     login(
         email: String!,
         password: String!,
         device_name: String!
     ): String!
+    logout: LogoutResponse! @guard @field(resolver: "App\\GraphQL\\Mutations\\Logout")
 }
+
 
 
 extend type Query {
