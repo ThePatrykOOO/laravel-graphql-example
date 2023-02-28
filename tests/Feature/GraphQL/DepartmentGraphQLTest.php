@@ -23,7 +23,7 @@ class DepartmentGraphQLTest extends TestCase
 
         $response = $this->graphQL(
         /** @lang GraphQL */ '
-            query {
+            {
               departments(first: 10) {
                 data {
                   id
@@ -43,6 +43,54 @@ class DepartmentGraphQLTest extends TestCase
                                 'id',
                                 'name',
                                 'address'
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        );
+
+        $this->assertCount(4, $response->json('data.departments.data'));
+    }
+
+    public function testQueryDepartmentsRelationEmployees(): void
+    {
+        Sanctum::actingAs(
+            User::factory()->create(),
+        );
+
+        Department::factory(4)->create();
+
+        $response = $this->graphQL(
+        /** @lang GraphQL */ '
+            {
+              departments(first: 10) {
+                data {
+                  id
+                  name
+                  address
+                  employees {
+                    id
+                  }
+                }
+              }
+            }'
+        );
+
+        $response->assertJsonStructure(
+            [
+                'data' => [
+                    'departments' => [
+                        'data' => [
+                            '*' => [
+                                'id',
+                                'name',
+                                'address',
+                                'employees' => [
+                                    '*' => [
+                                        'id'
+                                    ]
+                                ]
                             ]
                         ]
                     ]

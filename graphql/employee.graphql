@@ -1,0 +1,43 @@
+extend type Query {
+    employees: [Employee!]! @paginate @guard
+    employee(id: ID @eq): Employee @find @guard
+}
+#
+extend type Mutation {
+    createEmployee(
+        first_name: String! @rules(apply: ["min:3", "max:255"]),
+        last_name: String! @rules(apply: ["min:3", "max:255"]),
+        department_id: Int! @rules(apply: ["exists:departments,id"]),
+        role: EmployeeRole!,
+        usd_salary: Int @rules(apply: ["min:0"]),
+    ) : Employee @create @guard
+    updateEmployee(
+        id: ID!,
+        first_name: String! @rules(apply: ["min:3", "max:255"]),
+        last_name: String! @rules(apply: ["min:3", "max:255"]),
+        department_id: Int! @rules(apply: ["exists:departments,id"]),
+        role: EmployeeRole!,
+        usd_salary: Int @rules(apply: ["min:0"]),
+    ): Employee! @update @guard
+    deleteEmployee(id: ID!): Employee @delete @guard
+}
+
+enum EmployeeRole {
+    DIRECTOR @enum(value: "director")
+    MANAGER @enum(value: "manager")
+    DEVELOPER @enum(value: "developer")
+    TESTER @enum(value: "tester")
+}
+
+type Employee {
+    id: ID!
+    first_name: String!
+    last_name: String!
+    department_id: Int!
+    role: EmployeeRole!
+    usd_salary: Int
+    created_at: String!
+    updated_at: String!
+    department: Department! @belongsTo
+}
+

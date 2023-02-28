@@ -1,9 +1,10 @@
-type Query {
+extend type Query {
     departments: [Department!]! @paginate @guard
+    department(id: ID @eq): Department @find @guard
     department(id: ID @eq): Department @find @guard
 }
 #
-type Mutation {
+extend type Mutation {
     createDepartment(
         name: String! @rules(apply: ["min:3", "max:255"]),
         address: String! @rules(apply: ["min:3", "max:255"]),
@@ -12,8 +13,8 @@ type Mutation {
         id: ID!,
         name: String! @rules(apply: ["min:3", "max:255"]),
         address: String! @rules(apply: ["min:3", "max:255"]),
-    ): Department! @update
-    deleteDepartment(id: ID!): Department @delete
+    ): Department! @update @guard
+    deleteDepartment(id: ID!): Department @delete @guard
 }
 
 type Department {
@@ -22,5 +23,6 @@ type Department {
     address: String!
     created_at: String!
     updated_at: String!
+    employees: [Employee]! @hasMany
 }
 
