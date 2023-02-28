@@ -2,7 +2,7 @@ extend type Query {
     employees: [Employee!]! @paginate @guard
     employee(id: ID @eq): Employee @find @guard
 }
-#
+
 extend type Mutation {
     createEmployee(
         first_name: String! @rules(apply: ["min:3", "max:255"]),
@@ -35,7 +35,7 @@ type Employee {
     last_name: String!
     department_id: Int!
     role: EmployeeRole!
-    usd_salary: Int
+    usd_salary: Int #op
     created_at: String!
     updated_at: String!
     department: Department! @belongsTo
